@@ -20,9 +20,13 @@ uint8_t buffer[20];
 uint32_t *result = (uint32_t *)buffer;
 int i, j;
 
+#ifdef __SWITCH__
+	std::string fname = "290.rec";
+#else
 	char* basepath = SDL_GetPrefPath("nxengine", "nxengine-evo");
 	std::string fname = std::string(basepath) + "290.rec";
 	SDL_free(basepath);
+#endif
 
 	fp = myfopen(widen(fname).c_str(), widen("rb").c_str());
 	if (!fp)
@@ -68,9 +72,13 @@ bool niku_save(uint32_t value)
 uint8_t buf_byte[20];
 uint32_t *buf_dword = (uint32_t *)buf_byte;
 
+#ifdef __SWITCH__
+	std::string fname = "290.rec";
+#else
 	char* basepath = SDL_GetPrefPath("nxengine", "nxengine-evo");
 	std::string fname = std::string(basepath) + "290.rec";
 	SDL_free(basepath);
+#endif
 
 	// place values
 	buf_dword[0] = value;

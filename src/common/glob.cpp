@@ -65,6 +65,7 @@ Glob::~Glob() {
 }
 
 bool Glob::Next() {
+#ifndef __SWITCH__
   while ((dir_entry_ = readdir(dir_)) != 0) {
     std::cout << pattern_ << std::endl;
     std::cout << dir_entry_->d_name << std::endl;
@@ -73,6 +74,7 @@ bool Glob::Next() {
       return true;
     }
   }
+#endif
   return false;
 }
 

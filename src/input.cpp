@@ -30,6 +30,23 @@ bool input_init(void)
 	}
 	
 	// default mappings
+#ifdef __SWITCH__
+	mappings[LEFTKEY].jbut        = 12;
+	mappings[UPKEY].jbut          = 13;
+	mappings[RIGHTKEY].jbut       = 14;
+	mappings[DOWNKEY].jbut        = 15;
+
+	mappings[FIREKEY].jbut        = 0;  // A
+	mappings[JUMPKEY].jbut        = 1;  // B
+	mappings[MAPSYSTEMKEY].jbut   = 2;  // X
+	mappings[ENTERKEY].jbut       = 3;  // Y
+
+	mappings[PREVWPNKEY].jbut     = 6;  // L
+	mappings[NEXTWPNKEY].jbut     = 7;  // R
+
+	mappings[INVENTORYKEY].jbut   = 10; // +
+	mappings[ESCKEY].jbut         = 11; // -
+#endif
 	mappings[LEFTKEY].key      = SDLK_LEFT;
 	mappings[RIGHTKEY].key     = SDLK_RIGHT;
 	mappings[UPKEY].key        = SDLK_UP;

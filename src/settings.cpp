@@ -21,9 +21,13 @@ static bool tryload(Settings *setfile)
 {
 FILE *fp;
 
+#ifdef __SWITCH__
+	std::string path = "settings.dat";
+#else
 	char* basepath = SDL_GetPrefPath("nxengine", "nxengine-evo");
 	std::string path = std::string(basepath) + "settings.dat";
 	SDL_free(basepath);
+#endif
 
 	stat("Loading settings...");
 	
@@ -72,10 +76,15 @@ bool settings_load(Settings *setfile)
 		stat("No saved settings; using defaults.");
 		
 		memset(setfile, 0, sizeof(Settings));
+#ifdef __SWITCH__
+		setfile->resolution = 6;		// smallest widescreen mode for now
+		setfile->fullscreen = true;
+#else
 		setfile->resolution = 2;		// 640x480 Windowed, should be safe value
+		setfile->fullscreen = false;
+#endif
 		setfile->last_save_slot = 0;
 		setfile->multisave = true;
-		setfile->fullscreen = false;
 		
 #if defined(DEBUG)
 		setfile->enable_debug_keys = true;
@@ -113,9 +122,13 @@ bool settings_save(Settings *setfile)
 {
 FILE *fp;
 
+#ifdef __SWITCH__
+	std::string path = "settings.dat";
+#else
 	char* basepath = SDL_GetPrefPath("nxengine", "nxengine-evo");
 	std::string path = std::string(basepath) + "settings.dat";
 	SDL_free(basepath);
+#endif
 
 	if (!setfile)
 		setfile = &normal_settings;

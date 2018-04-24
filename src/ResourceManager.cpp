@@ -17,7 +17,7 @@
 
 bool ResourceManager::fileExists(const std::string& filename)
 {
-#if defined(__unix__) || defined(__APPLE__) // Linux, OS X, BSD
+#if defined(__unix__) || defined(__APPLE__) || defined(__SWITCH__) // Linux, OS X, BSD, NX
     struct stat st;
 
     if (stat(filename.c_str(), &st) == 0)
@@ -129,7 +129,16 @@ std::string ResourceManager::getLocalizedPath(const std::string& filename)
         }
         SDL_free(home);
     }
+#elif defined (__SWITCH__)
+    // only look in romfs...
+    _tryPath="romfs:/lang/"+std::string(settings->language)+"/"+filename;
+    if (fileExists(_tryPath))
+    {
+        return _tryPath;
+    }
 
+    _tryPath="romfs:/"+filename;
+    return _tryPath;
 #endif
 
     _tryPath="data/lang/"+std::string(settings->language)+"/"+filename;
@@ -188,7 +197,10 @@ std::string ResourceManager::getPathForDir(const std::string& dir)
         }
         SDL_free(home);
     }
-
+#elif defined (__SWITCH__)
+    // only look in romfs...
+    _tryPath="romfs:/"+dir;
+    return _tryPath;
 #endif
 
     _tryPath="data/"+dir;
@@ -214,8 +226,19 @@ inline std::vector<std::string> glob(const std::string& pat){
 
 void ResourceManager::findLanguages()
 {
-    std::vector<std::string> langs=glob(getPathForDir("lang/")+"*");
     _languages.push_back("english");
+
+#ifdef __SWITCH__
+    // globbing is bad, just use a list or read all directory folders...
+    _languages.push_back("chinese");
+    _languages.push_back("french");
+    _languages.push_back("german");
+    _languages.push_back("italian");
+    _languages.push_back("japanese");
+    _languages.push_back("polish");
+    _languages.push_back("russian");
+#else
+    std::vector<std::string> langs=glob(getPathForDir("lang/")+"*");
     for (auto &l: langs)
     {
         std::cout << l << std::endl;
@@ -226,6 +249,7 @@ void ResourceManager::findLanguages()
             _languages.push_back(l.substr(l.find_last_of('/')+1));
         }
     }
+#endif
 }
 
 std::vector<std::string>& ResourceManager::languages()

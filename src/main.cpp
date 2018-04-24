@@ -29,6 +29,9 @@ using namespace Graphics;
 #include "screeneffect.h"
 #include "ResourceManager.h"
 
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
 
 int fps = 0;
 static int fps_so_far = 0;
@@ -42,8 +45,10 @@ int flipacceltime = 0;
 static void fatal(const char *str)
 {
 	staterr("fatal: '%s'", str);
-	
+
+#ifndef __SWITCH__
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal Error", str, NULL);
+#endif
 }
 
 /*static bool check_data_exists()
@@ -262,6 +267,10 @@ bool inhibit_loadfade = false;
 bool error = false;
 bool freshstart;
 	
+#ifdef __SWITCH__
+	bool romfs_available = false;
+	std::string logpath = "debug.log";
+#else
 	char* basepath = SDL_GetBasePath();
 	
 #if defined(_WIN32)
@@ -274,6 +283,7 @@ bool freshstart;
 	char* prefpath = SDL_GetPrefPath("nxengine", "nxengine-evo");
 	std::string logpath = std::string(prefpath) + "debug.log";
 	SDL_free(prefpath);
+#endif
 	
 	SetLogFilename(logpath.c_str());
 	
@@ -282,8 +292,17 @@ bool freshstart;
 		staterr("ack, sdl_init failed: %s.", SDL_GetError());
 		return 1;
 	}
+
+#ifdef __SWITCH__
+    if (int res = romfsInit() != 0) {
+        staterr("romfsInit() failed: 0x%x", res);
+        return 1;
+    } else
+        romfs_available = true;
+#else
 	atexit(SDL_Quit);
-	
+#endif
+
 	// start up inputs first thing because settings_load may remap them
 	input_init();
 	
@@ -405,6 +424,14 @@ shutdown: ;
 	font_close();
 	sound_close();
 	textbox.Deinit();
+
+#ifdef __SWITCH__
+    if (romfs_available)
+        romfsExit();
+
+	SDL_Quit();
+#endif
+
 	return error;
 	
 ingame_error: ;

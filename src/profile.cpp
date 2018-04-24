@@ -233,9 +233,14 @@ void c------------------------------() {}
 // returns the filename for a save file given it's number
 char *GetProfileName(int num)
 {
+#if __SWITCH__
+    std::string prof = std::string();
+#else
     char* basepath = SDL_GetPrefPath("nxengine", "nxengine-evo");
     std::string prof = std::string(basepath);
     SDL_free(basepath);
+#endif
+
     std::string profile;
 	if (num == 0)
 	{

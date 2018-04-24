@@ -137,7 +137,11 @@ bool Graphics::InitVideo()
 
 
 	if (!renderer)
-    	renderer = SDL_CreateRenderer(window, -1, /*SDL_RENDERER_SOFTWARE | */SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+#ifdef __SWITCH__
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+#else
+		renderer = SDL_CreateRenderer(window, -1, /*SDL_RENDERER_SOFTWARE | */SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+#endif
 	if (!renderer)
 	{
 		staterr("Graphics::InitVideo: error setting video mode (SDL_CreateRenderer: %s)", SDL_GetError());
@@ -257,7 +261,11 @@ const Graphics::gres_t* Graphics::GetRes()
         {(char*)"1280x1024", 1280,     1024,     320,      256,      4,            false,      true },
         {(char*)"1600x1200", 1600,     1200,     320,      240,      5,            false,      true },
         // widescreen
+#ifdef __SWITCH__
+        {(char*)"426x240",   426,      240,      426,      240,      1,            true,       true },
+#else
         {(char*)"480x272",   480,      272,      480,      272,      1,            true,       true },
+#endif
         {(char*)"1366x768",  1366,     768,      455,      256,      3,            true,       true },
         {(char*)"1440x900",  1440,     900,      480,      300,      3,            true,       true },
         {(char*)"1920x1080", 1920,     1080,     480,      270,      4,            true,       true },
