@@ -31,10 +31,10 @@ bool input_init(void)
 	
 	// default mappings
 #ifdef __SWITCH__
-	mappings[LEFTKEY].jbut        = 12;
-	mappings[UPKEY].jbut          = 13;
-	mappings[RIGHTKEY].jbut       = 14;
-	mappings[DOWNKEY].jbut        = 15;
+	mappings[LEFTKEY].jbut        = 16;
+	mappings[UPKEY].jbut          = 17;
+	mappings[RIGHTKEY].jbut       = 18;
+	mappings[DOWNKEY].jbut        = 19;
 
 	mappings[FIREKEY].jbut        = 0;  // A
 	mappings[JUMPKEY].jbut        = 1;  // B
